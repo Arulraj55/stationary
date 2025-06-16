@@ -16,7 +16,7 @@ mongoose.connect(
 .catch(err => console.error(err));
 
 // Signup
-app.post('/api/signup', async (req, res) => {
+app.post('https://stationary-5c64.onrender.com/api/signup', async (req, res) => {
     const { username, email, password, address } = req.body;
     try {
         const existingUser = await User.findOne({ email });
@@ -32,7 +32,7 @@ app.post('/api/signup', async (req, res) => {
 });
 
 // Login
-app.post('/api/login', async (req, res) => {
+app.post('https://stationary-5c64.onrender.com/api/login', async (req, res) => {
     const { username, password } = req.body;
     try {
         const user = await User.findOne({ username, password });
@@ -44,6 +44,6 @@ app.post('/api/login', async (req, res) => {
 });
 
 // Cart routes
-app.use('/api/cart', cartRoutes);
+app.use('https://stationary-5c64.onrender.com/api/cart', cartRoutes);
 
 app.listen(5000, () => console.log('Server running on port 5000'));
