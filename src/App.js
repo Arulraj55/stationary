@@ -7,6 +7,8 @@ import SignupPage from './frontend/pages/SignupPage';
 import CartPage from './frontend/pages/CartPage';
 import axios from 'axios';
 
+const API_BASE = "https://stationary-5c64.onrender.com";
+
 function App() {
     const [user, setUser] = useState(() => {
         const storedUser = localStorage.getItem('user');
@@ -24,7 +26,7 @@ function App() {
     }, [user]);
 
     const fetchCart = (userId) => {
-        axios.get(`http://localhost:5000/api/cart/${userId}`)
+        axios.get(`${API_BASE}/api/cart/${userId}`)
             .then(res => setCart(res.data.products || []))
             .catch(err => console.error('Error fetching cart:', err));
     };
@@ -37,7 +39,7 @@ function App() {
                 price: product.price,
                 image: product.image
             };
-            const response = await axios.post('http://localhost:5000/api/cart/add', {
+            const response = await axios.post(`${API_BASE}/api/cart/add`, {
                 userId: user._id,
                 product: productToSend
             });
@@ -50,7 +52,7 @@ function App() {
 
     const removeFromCart = async (productId) => {
         try {
-            const response = await axios.post('http://localhost:5000/api/cart/remove', {
+            const response = await axios.post(`${API_BASE}/api/cart/remove`, {
                 userId: user._id,
                 productId: String(productId)
             });
