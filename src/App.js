@@ -24,7 +24,7 @@ function App() {
     }, [user]);
 
     const fetchCart = (userId) => {
-        axios.get(`http://localhost:5000/api/cart/${userId}`)
+        axios.get(`https://stationary-5c64.onrender.com/api/cart/${userId}`)
             .then(res => setCart(res.data.products || []))
             .catch(err => console.error('Error fetching cart:', err));
     };
@@ -38,7 +38,7 @@ const addToCart = async (product) => {
             price: product.price,
             image: product.image
         };
-        const response = await axios.post('http://localhost:5000/api/cart/add', {
+        const response = await axios.post('https://stationary-5c64.onrender.com/api/cart/add', {
             userId: user._id,
             product: productToSend
         });
@@ -51,7 +51,7 @@ const addToCart = async (product) => {
 
     const removeFromCart = async (productId) => {
         try {
-            const response = await axios.post('http://localhost:5000/api/cart/remove', {
+            const response = await axios.post('https://stationary-5c64.onrender.com/api/cart/remove', {
                 userId: user._id,
                 productId: productId
             });
