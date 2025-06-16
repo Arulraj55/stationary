@@ -13,7 +13,7 @@ function SignupPage() {
     const handleSignup = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post('http://localhost:5000/api/signup', { username, email, password, address });
+            const res = await axios.post('https://stationary-5c64.onrender.com/api/signup', { username, email, password, address });
             if (res.data.success) {
                 alert('Signup successful! Please login.');
                 navigate('/login');

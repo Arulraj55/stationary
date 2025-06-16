@@ -9,9 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 mongoose.connect(
-  'mongodb+srv://arulrajjebasingh:YlDLDxAqYiN6td2U@cluster0.uk9xdqu.mongodb.net/stationeryapp?retryWrites=true&w=majority&appName=Cluster0',
-  { useNewUrlParser: true, useUnifiedTopology: true }
-)
+  'mongodb+srv://arulrajjebasingh:YlDLDxAqYiN6td2U@cluster0.uk9xdqu.mongodb.net/stationeryapp?retryWrites=true&w=majority&appName=Cluster0')
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.error(err));
 

@@ -13,7 +13,7 @@ function LoginPage({ setUser }) {
         e.preventDefault();
 
         try {
-            const res = await axios.post('http://localhost:5000/api/login', { username, password });
+            const res = await axios.post('https://stationary-5c64.onrender.com/api/login', { username, password });
 
             if (res.data.success) {
                 // Save user in App state and localStorage
