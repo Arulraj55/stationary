@@ -24,36 +24,35 @@ function App() {
     }, [user]);
 
     const fetchCart = (userId) => {
-        axios.get(`https://stationary-5c64.onrender.com/api/cart/${userId}`)
+        axios.get(`http://localhost:5000/api/cart/${userId}`)
             .then(res => setCart(res.data.products || []))
             .catch(err => console.error('Error fetching cart:', err));
     };
 
-const addToCart = async (product) => {
-    try {
-        // Always send productId as a string
-        const productToSend = {
-            productId: String(product.productId || product.id || product._id), // force string
-            title: product.title || product.name,
-            price: product.price,
-            image: product.image
-        };
-        const response = await axios.post('https://stationary-5c64.onrender.com/api/cart/add', {
-            userId: user._id,
-            product: productToSend
-        });
-        setCart(response.data.products);
-    } catch (error) {
-        console.error('Error adding to cart:', error);
-        alert('Failed to add item to cart.');
-    }
-};
+    const addToCart = async (product) => {
+        try {
+            const productToSend = {
+                productId: String(product.productId || product.id || product._id),
+                title: product.title || product.name,
+                price: product.price,
+                image: product.image
+            };
+            const response = await axios.post('http://localhost:5000/api/cart/add', {
+                userId: user._id,
+                product: productToSend
+            });
+            setCart(response.data.products);
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+            alert('Failed to add item to cart.');
+        }
+    };
 
     const removeFromCart = async (productId) => {
         try {
-            const response = await axios.post('https://stationary-5c64.onrender.com/api/cart/remove', {
+            const response = await axios.post('http://localhost:5000/api/cart/remove', {
                 userId: user._id,
-                productId: productId
+                productId: String(productId)
             });
             setCart(response.data.products);
         } catch (error) {

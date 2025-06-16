@@ -2,16 +2,18 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const User = require('./models/User');
-const Cart = require('./models/Cart');
+const cartRoutes = require('./routes/cartRoutes');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+// MongoDB connection (with database name)
 mongoose.connect(
-  'mongodb+srv://arulrajjebasingh:YlDLDxAqYiN6td2U@cluster0.uk9xdqu.mongodb.net/stationeryapp?retryWrites=true&w=majority&appName=Cluster0')
-    .then(() => console.log('MongoDB connected'))
-    .catch(err => console.error(err));
+  'mongodb+srv://arulrajjebasingh:YlDLDxAqYiN6td2U@cluster0.uk9xdqu.mongodb.net/stationeryapp?retryWrites=true&w=majority&appName=Cluster0'
+)
+.then(() => console.log('MongoDB connected'))
+.catch(err => console.error(err));
 
 // Signup
 app.post('/api/signup', async (req, res) => {
@@ -24,11 +26,10 @@ app.post('/api/signup', async (req, res) => {
         await newUser.save();
         res.json({ success: true, user: newUser });
     } catch (error) {
-        console.error('Signup error:', error); // Add this line
+        console.error('Signup error:', error);
         res.json({ success: false, message: 'Error creating user' });
     }
 });
-// ...existing code...
 
 // Login
 app.post('/api/login', async (req, res) => {
@@ -42,80 +43,7 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// Get Cart
-app.get('/api/cart/:userId', async (req, res) => {
-    try {
-        let cart = await Cart.findOne({ userId: req.params.userId });
-        if (!cart) {
-            cart = new Cart({ userId: req.params.userId, products: [] });
-            await cart.save();
-        }
-        res.json({ products: cart.products });
-    } catch (err) {
-        res.status(500).json({ message: 'Error fetching cart' });
-    }
-});
+// Cart routes
+app.use('/api/cart', cartRoutes);
 
-// Add to Cart
-app.post('/api/cart/add', async (req, res) => {
-    const { userId, product } = req.body;
-    try {
-        let cart = await Cart.findOne({ userId });
-        if (!cart) {
-            cart = new Cart({ userId, products: [] });
-        }
-
-        // Always use productId for matching
-const existingProductIndex = cart.products.findIndex(
-    p => String(p.productId) === String(product.productId)
-);
-
-        if (existingProductIndex > -1) {
-            cart.products[existingProductIndex].quantity += 1;
-        } else {
-            cart.products.push({
-                productId: String(product.productId),
-                title: product.title,
-                price: product.price,
-                image: product.image,
-                quantity: 1
-            });
-        }
-
-        await cart.save();
-        res.json({ products: cart.products });
-    } catch (err) {
-        res.status(500).json({ message: 'Error updating cart' });
-    }
-});
-
-// Remove from Cart
-app.post('/api/cart/remove', async (req, res) => {
-    const { userId, productId } = req.body;
-    try {
-        let cart = await Cart.findOne({ userId });
-        if (cart) {
-            const productIndex = cart.products.findIndex(
-                p => p.productId === String(productId)
-            );
-
-            if (productIndex > -1) {
-                if (cart.products[productIndex].quantity > 1) {
-                    cart.products[productIndex].quantity -= 1;
-                } else {
-                    cart.products.splice(productIndex, 1);
-                }
-            }
-
-            await cart.save();
-            res.json({ products: cart.products });
-        } else {
-            res.status(404).json({ message: 'Cart not found' });
-        }
-    } catch (err) {
-        res.status(500).json({ message: 'Error removing item' });
-    }
-});
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(5000, () => console.log('Server running on port 5000'));
